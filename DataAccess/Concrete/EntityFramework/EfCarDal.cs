@@ -1,39 +1,40 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarRentalDatabase>, ICarDal
     {
-        public void Add(Car entitiy)
+        public List<CarDetailDto> GetCarDetails()
         {
-            throw new NotImplementedException();
-        }
+            using (CarRentalDatabase carRentalDatabase = new CarRentalDatabase())
+            {
+                var result = from car in carRentalDatabase.Cars
+                             join brand in carRentalDatabase.Brands on car.BrandId equals brand.BrandId
+                             join color in carRentalDatabase.Colors on car.ColorId equals color.ColorId
+                             select new CarDetailDto
+                             {
+                                 BrandId = brand.BrandId,
+                                 BrandName = brand.BrandName,
+                                 ColorName = color.ColorName,
+                                 DailyPrice = car.DailyPrice
+                             };
 
-        public void Delete(Car entity)
-        {
-            throw new NotImplementedException();
-        }
+                return result.ToList();
 
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Car GetById(Expression<Func<Car, bool>> filter)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void Update(Car entity)
-        {
-            throw new NotImplementedException();
+            }
         }
     }
 }

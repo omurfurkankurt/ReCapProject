@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,12 @@ namespace DataAccess.Concrete.InMemory
         {
             _cars = new List<Car>
             {
-                new Car{Id = 1, BrandId = 1, ColorId = 1, DailyPrice = 530, ModelYear = 2022},
-                new Car{Id = 2, BrandId = 3, ColorId = 2, DailyPrice = 840, ModelYear = 2021},
-                new Car{Id = 3, BrandId = 2, ColorId = 2, DailyPrice = 360, ModelYear = 2023},
-                new Car{Id = 4, BrandId = 4, ColorId = 5, DailyPrice = 650, ModelYear = 2022},
-                new Car{Id = 5, BrandId = 7, ColorId = 3, DailyPrice = 578, ModelYear = 2021},
-                new Car{Id = 6, BrandId = 3, ColorId = 6, DailyPrice = 850, ModelYear = 2023}
+                new Car{CarId = 1, BrandId = 1, ColorId = 1, DailyPrice = 530, ModelYear = 2022},
+                new Car{CarId = 2, BrandId = 3, ColorId = 2, DailyPrice = 840, ModelYear = 2021},
+                new Car{CarId = 3, BrandId = 2, ColorId = 2, DailyPrice = 360, ModelYear = 2023},
+                new Car{CarId = 4, BrandId = 4, ColorId = 5, DailyPrice = 650, ModelYear = 2022},
+                new Car{CarId = 5, BrandId = 7, ColorId = 3, DailyPrice = 578, ModelYear = 2021},
+                new Car{CarId = 6, BrandId = 3, ColorId = 6, DailyPrice = 850, ModelYear = 2023}
 
             };
 
@@ -35,7 +36,7 @@ namespace DataAccess.Concrete.InMemory
 
         public void Delete(Car car)
         {
-           Car carToDelete = _cars.SingleOrDefault(p=>p.Id == car.Id);
+           Car carToDelete = _cars.SingleOrDefault(p=>p.CarId == car.CarId);
 
 
         }
@@ -55,20 +56,25 @@ namespace DataAccess.Concrete.InMemory
           return _cars.Where(p=>p.BrandId == carId).ToList();
         }
 
-        public Car GetById(Expression<Func<Car, bool>> filter)
+        public Car Get(Expression<Func<Car, bool>> filter)
         {
             throw new NotImplementedException();
         }
 
         public void Update(Car car)
         {
-            Car carToUpdate = _cars.SingleOrDefault(p=> p.Id == car.Id);
+            Car carToUpdate = _cars.SingleOrDefault(p=> p.CarId == car.CarId);
             carToUpdate.DailyPrice= car.DailyPrice;
             carToUpdate.ModelYear= car.ModelYear;
             carToUpdate.BrandId= car.BrandId;
             carToUpdate.ColorId= car.ColorId;
 
             
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            throw new NotImplementedException();
         }
     }
 }
