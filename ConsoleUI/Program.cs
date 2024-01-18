@@ -1,11 +1,13 @@
 ﻿using Business.Concrete;
 using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
+using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
+using System.Linq.Expressions;
 using System.Net.Http.Headers;
 
 namespace ConsoleUI
@@ -14,13 +16,36 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            UserManager userManager = new UserManager(new EfUserDal());
+
+            //UserAddTest(userManager);
+
+            //UserDeleteTest(userManager);
+            //UserUpdateTest(userManager);
+            //UserGetTest(userManager);
+            //UserGetAllTest(userManager);
+
+
+            CustomerManger customerManager = new CustomerManger(new EfCustomerDal());
+
+            //CustomerAddTest(customerManager);
+            //CustomerDeleteTest(customerManager);
+            //CustomerUpdateTest(customerManager);
+            //CustomerGetTest(customerManager);
+            //CustomerGetAllTest(customerManager);z
+
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            rentalManager.Add(new Rental { CarId = 3, CustomerId=5, RentDate = DateTime.Now });
+
+
+
             CarManager carManager = new CarManager(new EfCarDal());
             //CarAddTest(carManager);
 
             //  CarUpdateTest(carManager);
 
 
-            // CarDeleteTest(carManager);
+            //CarDeleteTest(carManager);
 
             //CarGetTest(carManager);
 
@@ -76,6 +101,70 @@ namespace ConsoleUI
                 carManager.Add(new Car { BrandId = 7, ColorId = 15, DailyPrice = 1300, ModelYear = 2015, Description = "2015 Sky Blue Peugeot" });
                 carManager.Add(new Car { BrandId = 9, ColorId = 4, DailyPrice = 1700, ModelYear = 2019, Description = "2019 Yellow Volvo" });
             }
+        }
+
+        private static void CustomerGetAllTest(CustomerManger customerManager)
+        {
+            foreach (var customer in customerManager.GetAll().Data)
+            {
+                Console.WriteLine("{0},{1}", customer.UserId, customer.CompanyName);
+
+            }
+        }
+
+        private static void CustomerGetTest(CustomerManger customerManager)
+        {
+            customerManager.Get(5);
+        }
+
+        private static void CustomerUpdateTest(CustomerManger customerManager)
+        {
+            customerManager.Update(new Customer { UserId = 5, CompanyName = "Anadolu Restoran Ltd Şti" });
+        }
+
+        private static void CustomerDeleteTest(CustomerManger customerManager)
+        {
+            customerManager.Delete(new Customer { UserId = 1 });
+        }
+
+        private static void CustomerAddTest(CustomerManger customerManager)
+        {
+            customerManager.Add(new Customer { UserId =15 , CompanyName = "Kodlama.io" });
+        }
+
+        private static void UserGetAllTest(UserManager userManager)
+        {
+            foreach (var user in userManager.GetAll().Data)
+            {
+                Console.WriteLine("{0},{1},{2}", user.Email, user.FirstName, user.LastName);
+
+            }
+        }
+
+        private static void UserGetTest(UserManager userManager)
+        {
+            userManager.Get(5);
+        }
+
+        private static void UserUpdateTest(UserManager userManager)
+        {
+            userManager.Update(new User { Id = 5, Email = "fkurt4536@gmail.com", FirstName = "Frukan", LastName = "Kurt", Password = "56kurt" });
+        }
+
+        private static void UserDeleteTest(UserManager userManager)
+        {
+            userManager.Delete(new User { Id = 4 });
+        }
+
+        private static void UserAddTest(UserManager userManager)
+        {
+            userManager.Add(new User { FirstName = "Kadir", LastName = "Özdemir", Email = "kadirozdemirr00@gmail.com", Password = "kadir123" });
+            userManager.Add(new User { FirstName = "Sevim", LastName = "Erünsal", Email = "sevim123@gmail.com", Password = "sevim123" });
+            userManager.Add(new User { FirstName = "seval", LastName = "Özakoğlu", Email = "seval123@gmail.com", Password = "seval123" });
+            userManager.Add(new User { FirstName = "Minasu", LastName = "Akın", Email = "minasu123@gmail.com", Password = "minasu123" });
+            userManager.Add(new User { FirstName = "Metin Atilla", LastName = "Akın", Email = "metinatilla123@gmail.com", Password = "atilla123" });
+            userManager.Add(new User { FirstName = "Mustafa Atakan", LastName = "Akın", Email = "mustafaatakan123@gmail.com", Password = "atakan123" });
+
         }
 
         private static void GetCarDetailTest(CarManager carManager)
@@ -270,4 +359,58 @@ namespace ConsoleUI
 //{
 //    Console.WriteLine("{0} {1} {2} {3} {4} {5}", car1.Id, car1.BrandId, car1.ModelYear, car1.Description, car1.DailyPrice, car1.ColorId);
 
+//}
+//public class RentalManager
+//{
+//    private readonly IRentalDal _rentalDal;
+
+//    public RentalManager(IRentalDal rentalDal)
+//    {
+//        _rentalDal = rentalDal;
+//    }
+
+//    public IResult Add(Rental rental)
+//    {
+//        // Kirada olan aracı kontrol et
+//        var isCarRented = _rentalDal.Get(p => p.ReturnDate == null && p.CarId == rental.CarId);
+
+//        if (isCarRented != null)
+//        {
+//            // Kirada olan araç varsa işlemi reddet
+//            return new ErrorResult("Araç zaten kirada.");
+//        }
+
+//        // Kirada olan araç yoksa, yeni kiralama işlemini gerçekleştir
+//        _rentalDal.Add(rental);
+//        return new SuccessResult("Kiralama başarılı.");
+//    }
+//}
+
+//public interface IRentalDal
+//{
+//    Rental Get(Expression<Func<Rental, bool>> filter);
+//    void Add(Rental rental);
+//}
+
+//public class EfRentalDal : IRentalDal
+//{
+//    // EfRentalDal sınıfı, Entity Framework ile veritabanı işlemlerini gerçekleştiren bir sınıf olmalıdır.
+//    // Bu sınıfı kendi projenize uygun şekilde implement etmelisiniz.
+//    // Örnek bir implementasyon:
+//    public Rental Get(Expression<Func<Rental, bool>> filter)
+//    {
+//        using (var context = new YourDbContext())
+//        {
+//            return context.Rentals.SingleOrDefault(filter);
+//        }
+//    }
+
+//    public void Add(Rental rental)
+//    {
+//        using (var context = new YourDbContext())
+//        {
+//            context.Rentals.Add(rental);
+//            context.SaveChanges();
+//        }
+//    }
 //}

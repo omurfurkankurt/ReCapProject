@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Business.Constants;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
@@ -27,17 +28,17 @@ namespace Business.Concrete
         {
             if (brand.BrandName.Length < 2)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.BrandIsInvalid);
 
             }
             _brandDal.Add(brand);
-            return new SuccessResult();
+            return new SuccessResult(Messages.BrandAdded);
         }
 
         public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
-            return new SuccessResult();
+            return new SuccessResult(Messages.BrandDelete);
         }
 
         public IResult Get(int brandId)
@@ -50,7 +51,7 @@ namespace Business.Concrete
         }
         public IDataResult<List<Brand>> GetAll()
         {
-            return new  SuccessDataResult<List<Brand>>(_brandDal.GetAll());
+            return new  SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.Brandlisted);
         }
 
 
@@ -58,7 +59,7 @@ namespace Business.Concrete
         {
             _brandDal.Update(brand);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.BrandUpdate);
         }
     }
 }

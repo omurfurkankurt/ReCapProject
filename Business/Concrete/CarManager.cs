@@ -35,12 +35,12 @@ namespace Business.Concrete
         {
             _carDal.Delete(car);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarDeleted);
         }
         public IResult Update(Car car)
         {
             _carDal.Update(car);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarUpdated);
         }
 
         public IDataResult<List<Car>> GetAll()
@@ -58,7 +58,7 @@ namespace Business.Concrete
         {
             Car car = _carDal.Get(p => p.CarId == CarId);
             Console.WriteLine($"Car Id: {car.CarId}, Brand Id: {car.BrandId}, Color Id: {car.ColorId}, Model Year: {car.ModelYear}, Daily Price: {car.DailyPrice}, Description: {car.Description}");
-            return new SuccessResult();
+            return new SuccessResult(Messages.GetByCar);
         }
 
         public IDataResult<List<Car>> GetCarsByBrandId(int brandId)
@@ -75,7 +75,7 @@ namespace Business.Concrete
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
            
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(),Messages.MaintenanceTime);
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(),Messages.CarDetails);
         }
     }
 }
